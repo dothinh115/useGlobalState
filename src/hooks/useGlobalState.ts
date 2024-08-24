@@ -1,8 +1,7 @@
 "use client";
 import { GlobalStateContext } from "@/contexts/GlobalStateContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
-// Create a custom hook to use the global state
 export const useGlobalState = (key: string, initialValue?: any) => {
   const context = useContext(GlobalStateContext);
 
@@ -14,13 +13,17 @@ export const useGlobalState = (key: string, initialValue?: any) => {
 
   const { state, setState } = context;
 
-  // Get value
   const value = state[key] ?? initialValue;
 
-  // Set value
   const setValue = (newValue: any) => {
     setState((prevState) => ({ ...prevState, [key]: newValue }));
   };
 
-  return [value, setValue] as const;
+  useEffect(() => {
+    if (state[key] === undefined && initialValue !== undefined) {
+      setValue(initialValue);
+    }
+  }, [key, initialValue]);
+
+  return [value, setValue];
 };
