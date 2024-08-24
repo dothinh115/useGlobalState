@@ -3,29 +3,28 @@ import { useGlobalState } from "@/hooks/useGlobalState";
 import { useEffect } from "react";
 
 export default function Home() {
-  const [test1, setTest1] = useGlobalState('test');
-  const [test2, setTest2] = useGlobalState('test2');
-
+  const [state_1, setState_1] = useGlobalState('state_1', 'Giá trị mặc định của state_1') //set giá trị mặc định cho state
+  const [state_2, setState_2] = useGlobalState('state_2') //không có giá trị mặc định
 
   useEffect(() => {
-    //set state 1 sau 5s
+    //thay đổi giá trị của state_1 sau 5s
     setTimeout(() => {
-      setTest1('Nội dung của state 1');
+      setState_1('Đặt lại giá trị cho state_1');
     }, 5000)
 
-    // set state 2 sau 2s
+    //Đổi giá trị của state_2
     setTimeout(() => {
-      setTest2('Nội dung của state 2');
+      setState_2('Giá trị của state_2 nhé')
     }, 2000)
   }, [])
 
   return (
     <div>
       <div>
-        Đây là state 1: {test1}
+        Đây là state 1: {state_1}
       </div>
       <div>
-        Đây là state 2: {test2}
+        Đây là state 2: {state_2}
       </div>
     </div>
   );
