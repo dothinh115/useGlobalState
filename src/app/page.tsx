@@ -1,12 +1,14 @@
 "use client"
 import { useGlobalState } from "@/hooks/useGlobalState";
+import { USER } from "@/utils/constant";
 import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Home() {
   const [state_1, setState_1] = useGlobalState('state_1', true) //set giá trị mặc định cho state
   const [state_2, setState_2] = useGlobalState('state_2') //không có giá trị mặc định
-  useGlobalState('user', 'dothinh115@gmail.com') //click vào link bên dưới đi sang /test sẽ thấy dc thông tin user này!
+
+  useGlobalState(USER, 'dothinh115@gmail.com')  //set giá trị mặc định cho state này
 
   useEffect(() => {
     //thay đổi giá trị của state_1 sau 5s
