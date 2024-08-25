@@ -5,7 +5,7 @@ import { useContext, useEffect } from "react";
 export const useGlobalState = <T = any>(
   key: string,
   initialValue?: T
-): [T | undefined, (newValue: T) => void] => {
+): [T, (newValue: T) => void] => {
   const context = useContext(GlobalStateContext);
 
   if (!context) {
