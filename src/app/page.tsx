@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 export default function Home() {
-  const [state_1, setState_1] = useGlobalState('state_1', true) //set giá trị mặc định cho state
+  const [state_1, setState_1] = useGlobalState<boolean>('state_1', true) //set giá trị mặc định cho state
   const [state_2, setState_2] = useGlobalState('state_2') //không có giá trị mặc định
 
   useGlobalState(USER, 'dothinh115@gmail.com')  //set giá trị mặc định cho state này

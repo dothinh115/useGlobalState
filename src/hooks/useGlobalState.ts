@@ -2,10 +2,10 @@
 import { GlobalStateContext } from "@/contexts/GlobalStateContext";
 import { useContext, useEffect } from "react";
 
-export const useGlobalState = (
+export const useGlobalState = <T = any>(
   key: string,
-  initialValue?: any
-): [any, Function] => {
+  initialValue?: T
+): [T | undefined, (newValue: T) => void] => {
   const context = useContext(GlobalStateContext);
 
   if (!context) {
@@ -16,12 +16,15 @@ export const useGlobalState = (
 
   const { state, setState } = context;
 
-  const value = state[key] ?? initialValue;
+  // Xác định giá trị hiện tại từ state hoặc sử dụng giá trị khởi tạo nếu không tồn tại.
+  const value: T = state[key] !== undefined ? state[key] : initialValue;
 
-  const setValue = (newValue: any) => {
+  // Hàm để cập nhật giá trị trong state.
+  const setValue = (newValue: T) => {
     setState((prevState) => ({ ...prevState, [key]: newValue }));
   };
 
+  // Sử dụng useEffect để thiết lập giá trị ban đầu nếu nó chưa được thiết lập.
   useEffect(() => {
     if (state[key] === undefined && initialValue !== undefined) {
       setValue(initialValue);
