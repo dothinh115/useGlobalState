@@ -2,7 +2,10 @@
 import { GlobalStateContext } from "@/contexts/GlobalStateContext";
 import { useContext, useEffect } from "react";
 
-export const useGlobalState = (key: string, initialValue?: any) => {
+export const useGlobalState = (
+  key: string,
+  initialValue?: any
+): [any, Function] => {
   const context = useContext(GlobalStateContext);
 
   if (!context) {
