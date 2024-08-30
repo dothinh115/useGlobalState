@@ -1,11 +1,12 @@
-import { NextResponse } from "next/server";
+import { ACCESS_TOKEN } from "@/utils/constant";
+import { NextRequest, NextResponse } from "next/server";
 
 export type TUser = {
   id: number;
   email: string;
 };
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   // Thông tin người dùng giả
   const user: TUser = {
     id: 1,
@@ -20,6 +21,15 @@ export async function GET() {
     response = successRes(user);
   }
   return NextResponse.json(response);
+  /*
+    Ở đây sẽ bắt accessToken, ví dụ
+    const accessToken = req.headers['new-token'] ??  req.cookies.get(ACCESS_TOKEN)
+    await sendProxy(target, {
+      headers : {
+        authorization: 'Bearer' + accessToken
+      }
+  })
+  */
 }
 
 const successRes = (data: any, statusCode = 200, message = "success") => {
