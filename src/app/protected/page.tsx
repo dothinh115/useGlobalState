@@ -1,14 +1,14 @@
-import Auth from "@/hoc/Auth"
-import { TUser } from "../api/me/route"
-type TProps= {
-    user: TUser
-}
- function Protected ({user}: TProps) {
-    return (<div>
-        route dc protect 
-        <br />
-        Email user: {user.email}
-    </div>)
+
+import User from "@/components/User";
+import {  serverUserFetch } from "@/utils/common";
+import { redirect } from "next/navigation";
+
+async function Protected () {
+    const user = await serverUserFetch();
+    if(!user) return redirect("/")
+    return (<>
+        <User />
+    </>)
 }
 
-export default Auth(Protected)
+export default (Protected)

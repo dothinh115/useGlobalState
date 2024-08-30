@@ -7,13 +7,15 @@ export type TUser = {
 };
 
 export async function GET(req: NextRequest) {
+  //ở đây bắt accessToken và gắn vào headers
+
   // Thông tin người dùng giả
   const user: TUser = {
     id: 1,
     email: "user@example.com",
   };
 
-  const authorize = true; // true: đã login, thay đổi phải refresh để lấy lại giá trị mới từ server
+  const authorize = false; // true: đã login, thay đổi phải refresh để lấy lại giá trị mới từ server
 
   let response: any = unauthorizeRes();
 
@@ -21,15 +23,6 @@ export async function GET(req: NextRequest) {
     response = successRes(user);
   }
   return NextResponse.json(response);
-  /*
-    Ở đây sẽ bắt accessToken, ví dụ
-    const accessToken = req.headers['new-token'] ??  req.cookies.get(ACCESS_TOKEN)
-    await sendProxy(target, {
-      headers : {
-        authorization: 'Bearer' + accessToken
-      }
-  })
-  */
 }
 
 const successRes = (data: any, statusCode = 200, message = "success") => {
