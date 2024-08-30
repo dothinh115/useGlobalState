@@ -18,9 +18,8 @@ export function middleware(req: NextRequest) {
 
   if (/\/api\//.test(pathname)) {
     const headers = req.headers;
-    //headers không được có new-token, nếu có thì đã được refresh ở bên dưới
     if (!expTime || (expTime && Number(expTime) < currentTime)) {
-      //logic refresh token và set lại cho client
+      //logic refresh token
     }
   }
 }

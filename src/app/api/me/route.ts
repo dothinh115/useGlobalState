@@ -1,4 +1,3 @@
-import { ACCESS_TOKEN } from "@/utils/constant";
 import { NextRequest, NextResponse } from "next/server";
 
 export type TUser = {
@@ -15,7 +14,7 @@ export async function GET(req: NextRequest) {
     email: "user@example.com",
   };
 
-  const authorize = false; // true: đã login, thay đổi phải refresh để lấy lại giá trị mới từ server
+  const authorize = true; // true: đã login, thay đổi phải refresh để lấy lại giá trị mới từ server
 
   let response: any = unauthorizeRes();
 
