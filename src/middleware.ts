@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 export function middleware(req: NextRequest) {
   const expTime = req.cookies.get("expTime"); //lấy exp time để so sánh
   const currentTime = Math.floor(Date.now() / 1000);
-  if (Number(expTime) < currentTime) {
+  if (!expTime || (expTime && Number(expTime) < currentTime)) {
     //Token hết hạn, gọi refresh token
     console.log("Token hết hạn, gọi refresh token");
   }
