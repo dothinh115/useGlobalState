@@ -6,6 +6,7 @@ export function middleware(req: NextRequest) {
   const currentTime = Math.floor(Date.now() / 1000);
   if (Number(expTime) < currentTime) {
     //Token hết hạn, gọi refresh token
+    console.log("Token hết hạn, gọi refresh token");
   }
 }
 export const config = {
