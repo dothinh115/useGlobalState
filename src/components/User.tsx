@@ -1,6 +1,6 @@
 "use client"
-import { TUser } from "@/app/api/me/route";
 import { useGlobalState } from "@/hooks/useGlobalState";
+import { TUser } from "@/types/user";
 import { USER } from "@/utils/constant";
 
 export default function User () {

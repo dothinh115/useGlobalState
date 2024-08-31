@@ -1,14 +1,10 @@
-
 import User from "@/components/User";
-import {  serverUserFetch } from "@/utils/common";
-import { redirect } from "next/navigation";
+import Protected from "@/hoc/Protected";
 
-async function Protected () {
-    const user = await serverUserFetch();
-    if(!user) return redirect("/")
-    return (<>
+async function ProtectedPage () {
+    return (
         <User />
-    </>)
+    )
 }
 
-export default (Protected)
+export default Protected(ProtectedPage)
