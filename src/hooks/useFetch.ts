@@ -12,9 +12,6 @@ export function useFetch<T>(url: string, options?: RequestInit) {
 
       try {
         const response = await fetch(url, options);
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-        }
         const result: T = await response.json();
         setData(result);
       } catch (error) {
