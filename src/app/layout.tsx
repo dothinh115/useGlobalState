@@ -17,7 +17,7 @@ export default async function RootLayout({
     console.error("Failed to fetch user data:", error);
   }
   return (
-      <AppWrapper user={null} >
+      <AppWrapper user={user} >
       {children}
       </AppWrapper>
 
