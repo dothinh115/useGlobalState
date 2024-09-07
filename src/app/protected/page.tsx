@@ -1,10 +1,14 @@
 import User from "@/components/User";
-import Protected from "@/hoc/Protected";
+import { TUser } from "@/types/user";
 
-async function ProtectedPage () {
-    return (
-        <User />
-    )
+type TProps = {
+  user: TUser | null
 }
 
-export default Protected(ProtectedPage)
+const ProtectedPage = ({user}: TProps) => {
+  return (
+    <User />
+  );
+};
+
+export default (ProtectedPage);

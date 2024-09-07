@@ -1,22 +1,17 @@
 import { headers } from "next/headers";
-
-export const serverFetch = async <T>(
+export const serverFetch = async <T = any>(
   url: string,
   options?: RequestInit
 ): Promise<T> => {
   const clientHeaders = headers();
+  const target = new URL(url, process.env.APP_URL).toString();
   try {
-    const response = await fetch(url, {
-      method: "GET", // Hoặc 'POST', 'PUT', 'DELETE' tuỳ theo yêu cầu
+    const response = await fetch(target, {
       ...(clientHeaders && {
         headers: clientHeaders,
       }),
       ...options,
     });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
 
     const data: T = await response.json();
     return data;

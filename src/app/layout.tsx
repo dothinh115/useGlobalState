@@ -2,15 +2,24 @@ import { serverFetch } from "@/utils/api";
 import AppWrapper from "@/components/AppWrapper";
 import "./globals.css";
 import { TUser } from "@/types/user";
+
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const user: {data: TUser} = await serverFetch(`${process.env.API_URL}/api/me`);
+  let user: TUser | null = null;
+  
+  try {
+    const {data: fetchedUser} = await serverFetch<{data: {data:TUser}}>(`api/me`);
+    user = fetchedUser.data
+  } catch (error) {
+    console.error("Failed to fetch user data:", error);
+  }
   return (
-    <AppWrapper user={user.data ?? null} >
-     {children}
-     </AppWrapper>
+      <AppWrapper user={null} >
+      {children}
+      </AppWrapper>
+
   );
 }

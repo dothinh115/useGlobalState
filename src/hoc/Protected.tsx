@@ -1,12 +1,24 @@
 "use client"
-import { useGlobalState } from "@/hooks/useGlobalState"
-import { USER } from "@/utils/constant"
-import { redirect } from "next/navigation";
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { useGlobalState } from "@/hooks/useGlobalState";
+import { USER } from "@/utils/constant";
 
-export default function Protected <P extends JSX.IntrinsicAttributes>(WrappedComponent: React.ComponentType<P>) {
+const withProtection = <P extends any>(WrappedComponent: React.ComponentType<P>) => {
+  return (props: any) => {
     const [user] = useGlobalState(USER);
-    if(!user) return redirect('/')
-    return (props: P) => {
-        return (<WrappedComponent {...props}/>)
-    }
-}
+    const router = useRouter();
+    useEffect(() => {
+      if(!user) {
+        router.push('/')
+      }
+    }, [user]);
+
+    if(!user) return null;
+
+    return <WrappedComponent {...props} />;
+  };
+
+};
+
+export default withProtection;
