@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { ACCESS_TOKEN, TOKEN_EXPIRED_TIME } from "@/utils/constant";
 import { isTokenValid, refreshTokenFunc } from "./utils/common";
-import { getCookie } from "cookies-next";
 
 const staticFileExtensions =
   /\.(jpg|jpeg|png|gif|svg|ico|css|js|woff|woff2|ttf|eot|js|css)$/i;
