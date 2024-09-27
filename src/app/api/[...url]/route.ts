@@ -24,17 +24,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     );
   }
   try {
-    const accessToken = getCookie(ACCESS_TOKEN, { req, res });
+    const token = getCookie(ACCESS_TOKEN, { req, res });
     //ở đây mình dùng ofetch để chuyển hướng đến api đích
     const response = await ofetch(replacedPath, {
       baseURL: process.env.API_URL,
       method: req.method,
       body: req.method !== "GET" ? req.body : undefined,
-      ...(accessToken && {
-        headers: {
-          authorization: "Bearer " + accessToken,
-        },
-      }),
+      headers: {
+        authorization: "Bearer " + token,
+      },
     });
     return NextResponse.json(response, { status: response.statusCode });
   } catch (error: any) {

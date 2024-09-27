@@ -38,7 +38,6 @@ export const refreshTokenFunc = async (req: NextRequest, res: NextResponse) => {
       method: "POST",
       body,
     });
-
     const accessToken = response.data.accessToken;
 
     if (accessToken) {
@@ -64,7 +63,7 @@ export const refreshTokenFunc = async (req: NextRequest, res: NextResponse) => {
         expires: accessTokenExpires,
       });
 
-      return accessToken;
+      return true;
     }
   } catch (error) {
     console.log(error);
