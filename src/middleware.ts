@@ -5,17 +5,27 @@ import { isTokenValid, refreshTokenFunc } from "./utils/common";
 const staticFileExtensions =
   /\.(jpg|jpeg|png|gif|svg|ico|css|js|woff|woff2|ttf|eot|js|css)$/i;
 
-export async function middleware(req: NextRequest & { "new-token"?: string }) {
-  const { pathname } = req.nextUrl;
-  const accessToken = req.cookies.get(ACCESS_TOKEN);
-  if (!staticFileExtensions.test(pathname)) {
-    const expTime = req.cookies.get(TOKEN_EXPIRED_TIME); //lấy exp time để so sánh
-    const tokenValid = isTokenValid(expTime?.value ?? null);
-    const res = NextResponse.next();
-    if (!tokenValid || !accessToken) {
-      //nếu token hết hạn thì gọi hàm refresh token
-      await refreshTokenFunc(req, res);
-    }
+export async function middleware(req: NextRequest) {
+  const url = req.nextUrl.clone();
+  const { pathname } = url;
+  let accessToken = req.cookies.get(ACCESS_TOKEN)?.value;
+  const res = NextResponse.next();
+  if (staticFileExtensions.test(pathname) || !pathname.startsWith("/api"))
     return res;
+  const expTime = req.cookies.get(TOKEN_EXPIRED_TIME); //lấy exp time để so sánh
+  const tokenValid = isTokenValid(expTime?.value ?? null);
+
+  if (!tokenValid || !accessToken) {
+    //nếu token hết hạn thì gọi hàm refresh token
+    accessToken = await refreshTokenFunc(req, res);
   }
+
+  const apiBaseUrl = process.env.API_URL || "";
+  const newUrl = new URL(apiBaseUrl);
+  newUrl.pathname = `${newUrl.pathname}${url.pathname.replace(/\/api\//, "")}`;
+  return NextResponse.rewrite(newUrl, {
+    headers: {
+      authorization: "Bearer " + accessToken,
+    },
+  });
 }

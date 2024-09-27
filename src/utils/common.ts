@@ -11,7 +11,7 @@ import { jwtDecode } from "jwt-decode";
 export const isTokenValid = (expTime: string | null) => {
   if (!expTime) return false;
   const currentTime = Math.floor(Date.now() / 1000);
-  if (Number(expTime) < currentTime) {
+  if (Number(expTime) < currentTime - 2000) {
     return false;
   }
   return true;
@@ -63,7 +63,7 @@ export const refreshTokenFunc = async (req: NextRequest, res: NextResponse) => {
         expires: accessTokenExpires,
       });
 
-      return true;
+      return accessToken;
     }
   } catch (error) {
     console.log(error);
