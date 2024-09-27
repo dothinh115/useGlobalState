@@ -12,7 +12,7 @@ const withProtection = <P extends any>(WrappedComponent: React.ComponentType<P>)
       if(!user) {
         router.push('/')
       }
-    }, [user]);
+    }, [user, router]);
 
     if(!user) return null;
 

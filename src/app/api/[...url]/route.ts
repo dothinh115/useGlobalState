@@ -1,10 +1,9 @@
 import { ACCESS_TOKEN } from "@/utils/constant";
 import { getCookie } from "cookies-next";
-import { NextApiRequest, NextApiResponse } from "next";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ofetch } from "ofetch";
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextRequest, res: NextResponse) {
   const match = req.url?.match(/\/api\/[^\/]+(?:\/[^\/]*)*/);
   let replacedPath: string | undefined;
 
