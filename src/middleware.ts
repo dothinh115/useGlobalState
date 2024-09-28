@@ -17,11 +17,14 @@ export async function middleware(req: NextRequest) {
   const apiBaseUrl = process.env.API_URL || "";
   const newUrl = new URL(apiBaseUrl);
   newUrl.pathname = `${newUrl.pathname}${url.pathname.replace(/\/api\//, "")}`;
+
+  //tạo headers
+  const headers = new Headers(req.headers);
+  headers.set("authorization", "Bearer " + accessToken);
+
   //chuyển hướng đến api thực
   return NextResponse.rewrite(newUrl, {
-    headers: {
-      authorization: "Bearer " + accessToken,
-    },
+    headers,
   });
 }
 
