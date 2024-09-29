@@ -1,0 +1,66 @@
+name: use_global_state_notify
+
+on:
+  workflow_run:
+    workflows: ["use_global_state_deploy"]
+    types:
+      - completed
+
+jobs:
+  notify_success:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Install dependencies
+        run: |
+          npm install moment-timezone
+
+      - name: Notify Discord Success
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const moment = require('moment-timezone');
+            const now = moment().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'); // Múi giờ Hà Nội
+            const {DISCORD_WEBHOOK_URL, COMMIT_MESSAGE, REPOSITORY, MESSAGE} = process.env;
+            const message = {
+              content: `🚀 🚀 🚀\n\n📁 **Repository:** ${REPOSITORY}\n\n📝 **Commit Message:** *"${COMMIT_MESSAGE}"*\n\n✅ **Status:** *"Success"*\n\n📅 **Date:** ${now}\n\n📣 **Message:** *"${MESSAGE}"*`
+            };
+            await fetch(DISCORD_WEBHOOK_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(message)
+            });
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          COMMIT_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
+          REPOSITORY: ${{ github.event.repository.name }}
+          MESSAGE: ${{ github.actor }} đã deploy thành công 👏.
+
+  notify_fail:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - name: Install dependencies
+        run: |
+          npm install moment-timezone
+
+      - name: Notify Discord Failure
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const moment = require('moment-timezone');
+            const now = moment().tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss'); // Múi giờ Hà Nội
+            const {DISCORD_WEBHOOK_URL, COMMIT_MESSAGE, REPOSITORY, MESSAGE} = process.env;
+            const message = {
+              content: `🔴 🔴 🔴\n\n📁 **Project:** ${REPOSITORY}\n\n📝 **Commit Message:** *"${COMMIT_MESSAGE}"*\n\n❌ **Status:** *"Fail"*\n\n📅 **Date:** ${now}\n\n📣 **Message:** *"${MESSAGE}"*`
+            };
+            await fetch(DISCORD_WEBHOOK_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(message)
+            });
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          COMMIT_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
+          REPOSITORY: ${{ github.event.repository.name }}
+          MESSAGE: ${{ github.actor }} đã gặp lỗi khi deploy 😢

@@ -1,0 +1,55 @@
+name: use_global_state_deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      PROCESS_NAME: use-global-state
+      PROJECT_PATH: /var/www/useGlobalState
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      ECOSYSTEM_PATH: ./ecosystem.config.cjs
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy to server
+        id: deploy
+        run: |
+          echo "Deploying..."
+          sshpass -p "$SSH_PASSWORD" ssh $SSH_USER@$SSH_HOST << EOF
+            cd ${{ env.PROJECT_PATH }}
+            # Pull từ git về 
+            git checkout -- yarn.lock package-lock.json
+            git pull 
+            
+            # Cài đặt các dependencies
+            yarn install
+            yarn build
+
+            # Check process
+            if pm2 list | grep -q '${{ env.PROCESS_NAME }}'; then
+              echo "Dừng và xoá process..."
+              pm2 stop ${{ env.PROCESS_NAME }}
+              pm2 delete ${{ env.PROCESS_NAME }}
+            else
+              echo "Không có process hoạt động."
+            fi
+
+            # Chạy pm2
+            pm2 start ${{ env.ECOSYSTEM_PATH }} --env production
+
+            echo 'Deploy thành công!'
+          EOF
