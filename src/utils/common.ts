@@ -65,8 +65,10 @@ export const refreshTokenFunc = async (req: NextRequest, res: NextResponse) => {
 
       return accessToken;
     }
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    res.cookies.delete(ACCESS_TOKEN);
+    res.cookies.delete(REFRESH_TOKEN);
+    res.cookies.delete(TOKEN_EXPIRED_TIME);
     return false;
   }
 };

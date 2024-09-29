@@ -1,14 +1,25 @@
 import { headers } from "next/headers";
+
 export const serverFetch = async <T = any>(
   url: string,
   options?: RequestInit
 ): Promise<T> => {
   const clientHeaders = headers();
+  const sanitizedHeaders = new Headers(clientHeaders);
+
+  const unwantedHeaders = [
+    "host",
+    "content-length",
+    "connection",
+    "accept-encoding",
+  ];
+  unwantedHeaders.forEach((header) => sanitizedHeaders.delete(header));
+
   const target = new URL(url, process.env.APP_URL).toString();
   try {
     const response = await fetch(target, {
-      ...(clientHeaders && {
-        headers: clientHeaders,
+      ...(sanitizedHeaders && {
+        headers: sanitizedHeaders,
       }),
       ...options,
     });
