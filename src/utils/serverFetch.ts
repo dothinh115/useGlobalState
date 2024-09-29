@@ -1,9 +1,9 @@
 import { headers } from "next/headers";
 
-export const serverFetch = async <T = any>(
+export default async function serverFetch<T = any>(
   url: string,
   options?: RequestInit
-): Promise<T> => {
+): Promise<T> {
   const clientHeaders = headers();
   const sanitizedHeaders = new Headers(clientHeaders);
 
@@ -30,4 +30,4 @@ export const serverFetch = async <T = any>(
     console.error("Failed to fetch data:", error);
     throw error;
   }
-};
+}

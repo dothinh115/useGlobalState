@@ -1,7 +1,7 @@
-import { serverFetch } from "@/utils/api";
 import AppWrapper from "@/components/AppWrapper";
 import "./globals.css";
 import { TUser } from "@/types/user";
+import serverFetch from "@/utils/serverFetch";
 
 export default async function RootLayout({
   children,
@@ -18,7 +18,9 @@ export default async function RootLayout({
   }
   return (
       <AppWrapper user={user} >
+        <div className="p-5">
       {children}
+      </div>
       </AppWrapper>
 
   );
