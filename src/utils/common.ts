@@ -5,8 +5,8 @@ import {
   REFRESH_TOKEN,
   TOKEN_EXPIRED_TIME,
 } from "./constant";
-import { NextRequest, NextResponse } from "next/server";
-import { jwtDecode } from "jwt-decode";
+import { NextRequest } from "next/server";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 export const isTokenValid = (expTime: string | null) => {
   if (!expTime) return false;
@@ -17,8 +17,7 @@ export const isTokenValid = (expTime: string | null) => {
   return true;
 };
 
-export const refreshTokenFunc = async (req: NextRequest, res: NextResponse) => {
-  const cookiePath = process.env.COOKIE_PATH;
+export const refreshTokenFunc = async (req: NextRequest) => {
   const apiUrl = process.env.API_URL;
   const refreshToken = req.cookies.get(REFRESH_TOKEN);
   const clientId = req.cookies.get(CLIENT_ID);
@@ -39,36 +38,18 @@ export const refreshTokenFunc = async (req: NextRequest, res: NextResponse) => {
       body,
     });
     const accessToken = response.data.accessToken;
-
     if (accessToken) {
-      const accessTokenDecoded: any = jwtDecode(accessToken);
-      const accessTokenExpires = new Date(accessTokenDecoded.exp * 1000);
-      res.cookies.set({
-        name: ACCESS_TOKEN,
-        value: accessToken,
-        domain: cookiePath,
-        httpOnly: true,
-        secure: true,
-        sameSite: "lax",
-        expires: accessTokenExpires,
-      });
-
-      res.cookies.set({
-        name: TOKEN_EXPIRED_TIME,
-        value: accessTokenDecoded.exp,
-        domain: cookiePath,
-        httpOnly: true,
-        secure: true,
-        sameSite: "lax",
-        expires: accessTokenExpires,
-      });
-
       return accessToken;
     }
   } catch (error: any) {
-    res.cookies.delete(ACCESS_TOKEN);
-    res.cookies.delete(REFRESH_TOKEN);
-    res.cookies.delete(TOKEN_EXPIRED_TIME);
+    console.log(error.data);
     return false;
   }
 };
+
+export async function getFingerSprint() {
+  const fpPromise = await FingerprintJS.load();
+  const fpPromiseGet = await fpPromise.get();
+  const clientId = fpPromiseGet.visitorId;
+  return clientId;
+}
