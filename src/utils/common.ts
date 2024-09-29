@@ -1,12 +1,6 @@
 import { ofetch } from "ofetch";
-import {
-  ACCESS_TOKEN,
-  CLIENT_ID,
-  REFRESH_TOKEN,
-  TOKEN_EXPIRED_TIME,
-} from "./constant";
+import { CLIENT_ID, REFRESH_TOKEN } from "./constant";
 import { NextRequest } from "next/server";
-import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 export const isTokenValid = (expTime: string | null) => {
   if (!expTime) return false;
@@ -46,10 +40,3 @@ export const refreshTokenFunc = async (req: NextRequest) => {
     return false;
   }
 };
-
-export async function getFingerSprint() {
-  const fpPromise = await FingerprintJS.load();
-  const fpPromiseGet = await fpPromise.get();
-  const clientId = fpPromiseGet.visitorId;
-  return clientId;
-}

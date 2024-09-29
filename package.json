@@ -9,8 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "cookies-next": "^4.2.1",
-    "http-proxy-middleware": "^3.0.0",
     "jwt-decode": "^4.0.0",
     "next": "14.2.6",
     "ofetch": "^1.3.4",
