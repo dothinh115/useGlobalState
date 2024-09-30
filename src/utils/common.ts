@@ -1,5 +1,5 @@
 import { ofetch } from "ofetch";
-import { CLIENT_ID, REFRESH_TOKEN } from "./constant";
+import { REFRESH_TOKEN } from "./constant";
 import { NextRequest } from "next/server";
 
 export const isTokenValid = (expTime: string | null) => {
@@ -14,15 +14,13 @@ export const isTokenValid = (expTime: string | null) => {
 export const refreshTokenFunc = async (req: NextRequest) => {
   const apiUrl = process.env.API_URL;
   const refreshToken = req.cookies.get(REFRESH_TOKEN);
-  const clientId = req.cookies.get(CLIENT_ID);
 
-  if (!refreshToken || !clientId) {
+  if (!refreshToken) {
     return false;
   }
 
   const body = {
     refreshToken: refreshToken.value,
-    clientId: clientId.value,
   };
 
   try {

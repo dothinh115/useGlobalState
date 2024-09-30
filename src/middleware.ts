@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import {
   ACCESS_TOKEN,
-  CLIENT_ID,
   REFRESH_TOKEN,
   TOKEN_EXPIRED_TIME,
 } from "@/utils/constant";
@@ -69,7 +68,6 @@ export async function middleware(req: NextRequest) {
   } else {
     res.cookies.delete(ACCESS_TOKEN);
     res.cookies.delete(REFRESH_TOKEN);
-    res.cookies.delete(CLIENT_ID);
     res.cookies.delete(TOKEN_EXPIRED_TIME);
   }
 
