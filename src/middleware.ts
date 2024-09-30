@@ -11,9 +11,6 @@ import { jwtDecode } from "jwt-decode";
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   let accessToken = req.cookies.get(ACCESS_TOKEN)?.value;
-  const apiBaseUrl = process.env.API_URL || "";
-  const newUrl = new URL(apiBaseUrl);
-  newUrl.pathname = `${newUrl.pathname}${url.pathname.replace(/\/api\//, "")}`;
 
   //tạo headers
   const headers = new Headers(req.headers);
@@ -33,6 +30,12 @@ export async function middleware(req: NextRequest) {
   headers.set("authorization", "Bearer " + accessToken);
   let res: NextResponse;
   if (url.pathname.startsWith("/api/")) {
+    const apiBaseUrl = process.env.API_URL || "";
+    const newUrl = new URL(apiBaseUrl);
+    newUrl.pathname = `${newUrl.pathname}${url.pathname.replace(
+      /\/api\//,
+      ""
+    )}`;
     res = NextResponse.rewrite(newUrl, {
       headers,
     });
