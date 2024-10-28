@@ -5,8 +5,8 @@ export default async function serverFetch<T = any>(
   options?: RequestInit
 ): Promise<T> {
   const clientHeaders = await headers();
-
   const target = new URL(url, process.env.APP_URL).toString();
+
   try {
     const response = await fetch(target, {
       ...(clientHeaders && {
