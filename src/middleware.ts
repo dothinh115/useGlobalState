@@ -76,7 +76,7 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     {
-      source: "/((?!_next/static|_next/image|favicon.ico).*)", // Loại bỏ các đường dẫn có chứa /_next/static, /_next/image và favicon.ico
+      source: "/((?!_next/static|_next/image|favicon.ico).*)",
     },
   ],
 };
