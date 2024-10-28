@@ -40,28 +40,15 @@ export async function middleware(req: NextRequest) {
   }
 
   if (accessToken && isTokenRefreshed) {
-    const cookiePath = process.env.COOKIE_PATH;
     const accessTokenDecoded: any = jwtDecode(accessToken);
     const accessTokenExpires = new Date(accessTokenDecoded.exp * 1000);
-    res.cookies.set({
-      name: ACCESS_TOKEN,
-      value: accessToken,
-      domain: cookiePath,
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      expires: accessTokenExpires,
-    });
-
-    res.cookies.set({
-      name: TOKEN_EXPIRED_TIME,
-      value: accessTokenDecoded.exp,
-      domain: cookiePath,
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      expires: accessTokenExpires,
-    });
+    setCookie(res, ACCESS_TOKEN, accessToken, accessTokenExpires);
+    setCookie(
+      res,
+      TOKEN_EXPIRED_TIME,
+      accessTokenDecoded.exp,
+      accessTokenExpires
+    );
   }
 
   if (!accessToken) {
@@ -80,4 +67,21 @@ export const config = {
       source: "/((?!_next/static|_next/image|favicon.ico).*)",
     },
   ],
+};
+
+const setCookie = (
+  res: NextResponse,
+  name: string,
+  value: string,
+  expires: Date
+) => {
+  res.cookies.set({
+    name,
+    value,
+    domain: process.env.COOKIE_PATH,
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    expires,
+  });
 };
