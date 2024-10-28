@@ -5,16 +5,12 @@ export default async function serverFetch<T = any>(
   options?: RequestInit
 ): Promise<T> {
   const clientHeaders = await headers();
-  const sanitizedHeaders = new Headers(clientHeaders);
-
-  const unwantedHeaders = ["host", "connection"];
-  unwantedHeaders.forEach((header) => sanitizedHeaders.delete(header));
 
   const target = new URL(url, process.env.APP_URL).toString();
   try {
     const response = await fetch(target, {
-      ...(sanitizedHeaders && {
-        headers: sanitizedHeaders,
+      ...(clientHeaders && {
+        headers: clientHeaders,
       }),
       ...options,
     });
