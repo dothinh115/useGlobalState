@@ -4,15 +4,10 @@ export default async function serverFetch<T = any>(
   url: string,
   options?: RequestInit
 ): Promise<T> {
-  const clientHeaders = headers();
+  const clientHeaders = await headers();
   const sanitizedHeaders = new Headers(clientHeaders);
 
-  const unwantedHeaders = [
-    "host",
-    "content-length",
-    "connection",
-    "accept-encoding",
-  ];
+  const unwantedHeaders = ["host", "connection"];
   unwantedHeaders.forEach((header) => sanitizedHeaders.delete(header));
 
   const target = new URL(url, process.env.APP_URL).toString();

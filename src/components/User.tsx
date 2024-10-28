@@ -6,7 +6,7 @@ import { clientFetch } from "@/utils/clientFetch";
 import { USER } from "@/utils/constant";
 import { useState } from "react";
 
- function User () {
+ function UserPage () {
     const [user] = useGlobalState<TUser>(USER);
     const [clientUser, setClientUser] = useState<TUser | null>(null);
     const handleClientFetch = async () => {
@@ -24,4 +24,4 @@ import { useState } from "react";
     </div>)
 }
 
-export default withProtection(User)
+export default withProtection(UserPage)
