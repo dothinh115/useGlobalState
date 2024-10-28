@@ -4,7 +4,7 @@ export default async function serverFetch<T = any>(
   url: string,
   options?: RequestInit
 ): Promise<T> {
-  const clientHeaders = await headers();
+  const clientHeaders = new Headers(await headers());
   const target = new URL(url, process.env.APP_URL).toString();
   clientHeaders.delete("host");
   clientHeaders.delete("connection");
