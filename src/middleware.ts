@@ -14,9 +14,7 @@ export async function middleware(req: NextRequest) {
   //tạo headers
   const headers = new Headers(req.headers);
   headers.delete("host");
-  headers.delete("content-length");
   headers.delete("connection");
-  headers.delete("accept-encoding");
 
   const expTime = req.cookies.get(TOKEN_EXPIRED_TIME); //lấy exp time để so sánh
   const tokenValid = isTokenValid(expTime?.value ?? null);
