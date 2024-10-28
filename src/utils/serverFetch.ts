@@ -18,7 +18,7 @@ export default async function serverFetch<T = any>(
     const data: T = await response.json();
     return data;
   } catch (error) {
-    console.error("Failed to fetch data:", error);
+    console.error("Server fetch thất bại: ", error);
     throw error;
   }
 }

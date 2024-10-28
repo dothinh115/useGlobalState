@@ -10,7 +10,7 @@ import { jwtDecode } from "jwt-decode";
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   let accessToken = req.cookies.get(ACCESS_TOKEN)?.value;
-
+  let isTokenRefreshed = false;
   //tạo headers
   const headers = new Headers(req.headers);
   headers.delete("host");
@@ -22,6 +22,7 @@ export async function middleware(req: NextRequest) {
   if (!tokenValid || !accessToken) {
     //nếu token hết hạn thì gọi hàm refresh token
     accessToken = await refreshTokenFunc(req);
+    isTokenRefreshed = true;
   }
 
   headers.set("authorization", "Bearer " + accessToken);
@@ -40,7 +41,7 @@ export async function middleware(req: NextRequest) {
     res = NextResponse.next();
   }
 
-  if (accessToken) {
+  if (accessToken && isTokenRefreshed) {
     const cookiePath = process.env.COOKIE_PATH;
     const accessTokenDecoded: any = jwtDecode(accessToken);
     const accessTokenExpires = new Date(accessTokenDecoded.exp * 1000);
@@ -50,7 +51,7 @@ export async function middleware(req: NextRequest) {
       domain: cookiePath,
       httpOnly: true,
       secure: true,
-      sameSite: "lax",
+      sameSite: "strict",
       expires: accessTokenExpires,
     });
 
@@ -60,10 +61,12 @@ export async function middleware(req: NextRequest) {
       domain: cookiePath,
       httpOnly: true,
       secure: true,
-      sameSite: "lax",
+      sameSite: "strict",
       expires: accessTokenExpires,
     });
-  } else {
+  }
+
+  if (!accessToken) {
     res.cookies.delete(ACCESS_TOKEN);
     res.cookies.delete(REFRESH_TOKEN);
     res.cookies.delete(TOKEN_EXPIRED_TIME);

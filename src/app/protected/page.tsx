@@ -1,11 +1,7 @@
-import UserPage from "@/components/User";
-
+import UserPage from "@/app/pages/UserPage";
 
 const ProtectedPage = () => {
-  return (
-    <UserPage />
-  );
+  return <UserPage />;
 };
-
 
 export default ProtectedPage;

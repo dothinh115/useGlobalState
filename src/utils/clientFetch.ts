@@ -11,7 +11,7 @@ export const clientFetch = async <T = any>(
     });
     return response;
   } catch (error) {
-    console.error("Failed to fetch data on client:", error);
+    console.error("Client fetch thất bại: ", error);
     throw error;
   }
 };

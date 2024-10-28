@@ -16,18 +16,12 @@ export const useGlobalState = <T = any>(
 
   const { state, setState } = context;
 
-  // Xác định giá trị hiện tại từ state hoặc sử dụng giá trị khởi tạo nếu không tồn tại.
   const value: T = state[key] !== undefined ? state[key] : initialValue;
 
-  // Hàm để cập nhật giá trị trong state.
-  const setValue = useCallback(
-    (newValue: T) => {
-      setState((prevState) => ({ ...prevState, [key]: newValue }));
-    },
-    [key, setState]
-  );
+  const setValue = (newValue: T) => {
+    setState((prevState) => ({ ...prevState, [key]: newValue }));
+  };
 
-  // Sử dụng useEffect để thiết lập giá trị ban đầu nếu nó chưa được thiết lập.
   useEffect(() => {
     if (state[key] === undefined && initialValue !== undefined) {
       setValue(initialValue);
