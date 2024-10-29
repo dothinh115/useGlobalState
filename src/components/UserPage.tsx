@@ -1,5 +1,4 @@
 "use client";
-import withProtection from "@/hoc/withProtection";
 import { useGlobalState } from "@/hooks/useGlobalState";
 import { TUser } from "@/types/user";
 import { clientFetch } from "@/utils/clientFetch";
@@ -28,4 +27,4 @@ function UserPage() {
   );
 }
 
-export default withProtection(UserPage);
+export default UserPage;
