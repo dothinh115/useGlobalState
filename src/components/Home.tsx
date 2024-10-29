@@ -5,5 +5,5 @@ import { USER } from "@/utils/constant";
 
 export default function HomePage() {
   const [user] = useGlobalState<TUser>(USER);
-  return user.email;
+  return user?.email;
 }

@@ -1,6 +1,6 @@
 "use client";
 import { GlobalStateContext } from "@/contexts/GlobalStateContext";
-import { useContext, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 
 export const useGlobalState = <T = any>(
   key: string,
@@ -18,9 +18,12 @@ export const useGlobalState = <T = any>(
 
   const value: T = state[key] !== undefined ? state[key] : initialValue;
 
-  const setValue = (newValue: T) => {
-    setState((prevState) => ({ ...prevState, [key]: newValue }));
-  };
+  const setValue = useCallback(
+    (newValue: T) => {
+      setState((prevState) => ({ ...prevState, [key]: newValue }));
+    },
+    [setState, key]
+  );
 
   useEffect(() => {
     if (state[key] === undefined && initialValue !== undefined) {
