@@ -1,38 +1,38 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import {
   ACCESS_TOKEN,
   REFRESH_TOKEN,
   TOKEN_EXPIRED_TIME,
-} from "@/utils/constant";
+} from "./utils/constant";
 import { isTokenValid, refreshTokenFunc } from "./utils/common";
 import { jwtDecode } from "jwt-decode";
 
-export async function middleware(req: NextRequest) {
+export default async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   let accessToken = req.cookies.get(ACCESS_TOKEN)?.value;
+  const expTime = req.cookies.get(TOKEN_EXPIRED_TIME)?.value;
   let isTokenRefreshed = false;
-  //tạo headers
-  const headers = new Headers(req.headers);
 
-  const expTime = req.cookies.get(TOKEN_EXPIRED_TIME); //lấy exp time để so sánh
-  const tokenValid = isTokenValid(expTime?.value ?? null);
+  const isValid = isTokenValid(expTime ?? null);
 
-  if (!tokenValid || !accessToken) {
-    //nếu token hết hạn thì gọi hàm refresh token
+  if (!isValid || !accessToken) {
     accessToken = await refreshTokenFunc(req);
     isTokenRefreshed = true;
   }
 
-  headers.set("authorization", "Bearer " + accessToken);
+  const headers = new Headers(req.headers);
   let res: NextResponse;
+  if (accessToken) {
+    headers.set("authorization", `Bearer ${accessToken}`);
+  }
   if (url.pathname.startsWith("/api/")) {
-    const apiBaseUrl = process.env.API_URL || "";
-    const newUrl = new URL(apiBaseUrl);
-    newUrl.pathname = `${newUrl.pathname}${url.pathname.replace(
+    const apiBaseUrl = process.env.API_URL ?? "";
+    const target = new URL(apiBaseUrl);
+    target.pathname = `${target.pathname}${url.pathname.replace(
       /\/api\//,
       ""
     )}`;
-    res = NextResponse.rewrite(newUrl, {
+    res = NextResponse.rewrite(target, {
       headers,
     });
   } else {
@@ -41,23 +41,17 @@ export async function middleware(req: NextRequest) {
 
   if (accessToken && isTokenRefreshed) {
     const accessTokenDecoded: any = jwtDecode(accessToken);
-    const accessTokenExpires = new Date(accessTokenDecoded.exp * 1000);
-    setCookie(res, ACCESS_TOKEN, accessToken, accessTokenExpires);
-    setCookie(
-      res,
-      TOKEN_EXPIRED_TIME,
-      accessTokenDecoded.exp,
-      accessTokenExpires
-    );
+    const accessTokenExp = new Date(accessTokenDecoded.exp * 1000);
+    setCookie(res, ACCESS_TOKEN, accessToken, accessTokenExp);
+    setCookie(res, TOKEN_EXPIRED_TIME, accessTokenDecoded.exp, accessTokenExp);
   }
 
   if (!accessToken) {
     res.cookies.delete(ACCESS_TOKEN);
-    res.cookies.delete(REFRESH_TOKEN);
     res.cookies.delete(TOKEN_EXPIRED_TIME);
+    res.cookies.delete(REFRESH_TOKEN);
   }
 
-  //chuyển hướng đến api thực
   return res;
 }
 
@@ -78,7 +72,6 @@ const setCookie = (
   res.cookies.set({
     name,
     value,
-    domain: process.env.COOKIE_PATH,
     httpOnly: true,
     secure: true,
     sameSite: "strict",

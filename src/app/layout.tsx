@@ -1,7 +1,6 @@
 import AppWrapper from "@/components/AppWrapper";
 import "./globals.css";
 import { TUser } from "@/types/user";
-import serverFetch from "@/utils/serverFetch";
 import React from "react";
 import { getUser } from "@/utils/getUser";
 

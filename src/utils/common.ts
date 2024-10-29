@@ -35,6 +35,6 @@ export const refreshTokenFunc = async (req: NextRequest) => {
     }
   } catch (error: any) {
     console.log(error.data);
-    return false;
+    return null;
   }
 };
