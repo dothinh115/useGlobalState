@@ -17,3 +17,5 @@ export default async function RootLayout({
     </AppWrapper>
   );
 }
+
+export const dynamic = "force-dynamic";
