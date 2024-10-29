@@ -1,6 +1,6 @@
 "use client";
 import { GlobalStateContext } from "@/contexts/GlobalStateContext";
-import { useCallback, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 export const useGlobalState = <T = any>(
   key: string,
