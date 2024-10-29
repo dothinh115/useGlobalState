@@ -1,4 +1,4 @@
-import UserPage from "@/app/pages/UserPage";
+import UserPage from "@/pages/UserPage";
 
 const ProtectedPage = () => {
   return <UserPage />;
