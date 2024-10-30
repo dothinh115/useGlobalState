@@ -13,7 +13,11 @@ export default async function RootLayout({
 
   return (
     <AppWrapper user={user}>
-      <div className="p-5">{children}</div>
+      <html>
+        <body>
+          <div className="p-5">{children}</div>
+        </body>
+      </html>
     </AppWrapper>
   );
 }
